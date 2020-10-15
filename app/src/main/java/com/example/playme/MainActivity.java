@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     RecyclerView recycler_view;
     MusicAdapter music_adapter;
+    static boolean isshuffled = false, isrepeated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +86,10 @@ public class MainActivity extends AppCompatActivity {
                 String album = cursor.getString(2);
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                 String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
 
                 // Save to audioList
-                audioList.add(new Audio(data, title, album, artist, duration));
+                audioList.add(new Audio(data, title, album, artist, duration, id));
             }
         }
         cursor.close();

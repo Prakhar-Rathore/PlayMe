@@ -25,6 +25,7 @@
         android:maxLines="1"
         android:textSize="18sp"
         android:textColor="#000"
+        android:layout_toStartOf="@id/more_btn"
         android:layout_toEndOf="@+id/image"
         android:layout_marginStart="20dp"/>
 
@@ -35,9 +36,18 @@
         android:text="Name"
         android:fontFamily="@font/nexa_light"
         android:textSize="12sp"
+        android:layout_toStartOf="@id/more_btn"
         android:textColor="@android:color/darker_gray"
         android:layout_below="@id/song_title"
         android:layout_toEndOf="@+id/image"
         android:layout_marginStart="20dp" />
+
+    <ImageView
+        android:id="@+id/more_btn"
+        android:src="@drawable/ic_baseline_more_vert"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

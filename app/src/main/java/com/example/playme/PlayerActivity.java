@@ -1,8 +1,6 @@
 package com.example.playme;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -15,15 +13,22 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static com.example.playme.MainActivity.audioList;
+import static com.example.playme.MainActivity.isrepeated;
+import static com.example.playme.MainActivity.isshuffled;
 
 public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     TextView music_name, artist_name, current_time, total_time;
-    ImageView back_arrow, menu_btn, play_previous, play_pause, play_next, music_img;
+    ImageView back_arrow, menu_btn, play_previous, play_pause, play_next, music_img,
+            shuffle, repeat;
     SeekBar seekbar;
     static ArrayList<Audio> list = new ArrayList<>();
     int position = -1;
@@ -40,20 +45,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        music_name = findViewById(R.id.music_name);
-        artist_name = findViewById(R.id.artist_name);
-        current_time = findViewById(R.id.current_time);
-        total_time = findViewById(R.id.total_time);
-        back_arrow = findViewById(R.id.back_arrow);
-        menu_btn = findViewById(R.id.menu_btn);
-        play_previous = findViewById(R.id.play_previous);
-        play_pause = findViewById(R.id.play_pause);
-        play_next = findViewById(R.id.play_next);
-        seekbar = findViewById(R.id.seekbar);
-        music_img = findViewById(R.id.music_img);
+        initViews();
         rotation = AnimationUtils.loadAnimation(this, R.anim.rotation);
-//        animout = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
-//        animin = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
 
         getIntentMethod();
         mp.setOnCompletionListener(this);
@@ -86,9 +79,66 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 handler.postDelayed(this, 1000);
             }
         });
-
         music_name.setText(list.get(position).getTitle());
         artist_name.setText(list.get(position).getArtist());
+
+        shuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isshuffled) {
+                    isshuffled = false;
+                    shuffle.setAlpha(0.5f);
+                }
+                else {
+                    isshuffled = true;
+                    shuffle.setAlpha(1f);
+                }
+            }
+        });
+
+        repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isrepeated) {
+                    isrepeated = false;
+                    repeat.setAlpha(0.5f);
+                }
+                else {
+                    isrepeated = true;
+                    repeat.setAlpha(1f);
+                }
+            }
+        });
+        back_arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        menu_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "It doesn't work for now", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void initViews() {
+        music_name = findViewById(R.id.music_name);
+        artist_name = findViewById(R.id.artist_name);
+        current_time = findViewById(R.id.current_time);
+        total_time = findViewById(R.id.total_time);
+        back_arrow = findViewById(R.id.back_arrow);
+        menu_btn = findViewById(R.id.menu_btn);
+        play_previous = findViewById(R.id.play_previous);
+        play_pause = findViewById(R.id.play_pause);
+        play_next = findViewById(R.id.play_next);
+        seekbar = findViewById(R.id.seekbar);
+        music_img = findViewById(R.id.music_img);
+        shuffle = findViewById(R.id.shuffle);
+        repeat = findViewById(R.id.repeat);
     }
 
     private String formattedTime(int current_position) {
@@ -165,11 +215,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if (mp.isPlaying()) {
             mp.stop();
             mp.release();
-            if (position != 0) {
-                position = (position - 1) % list.size();
+            if (isshuffled && !isrepeated) {
+                position = getRandom(list.size() - 1);
             }
-            else {
-                position = list.size() - 1;
+            else if (!isshuffled && !isrepeated) {
+                position = (position - 1) < 0 ? (list.size() - 1) : position - 1;
             }
             uri = Uri.parse(list.get(position).getData());
             mp = MediaPlayer.create(getApplicationContext(), uri);
@@ -192,11 +242,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp.start();
         }
         else {
-            if (position != 0) {
-                position = (position - 1) % list.size();
+            if (isshuffled && !isrepeated) {
+                position = getRandom(list.size() - 1);
             }
-            else {
-                position = list.size() - 1;
+            else if (!isshuffled && !isrepeated) {
+                position = (position - 1) < 0 ? (list.size() - 1) : position - 1;
             }
             uri = Uri.parse(list.get(position).getData());
             mp = MediaPlayer.create(getApplicationContext(), uri);
@@ -243,7 +293,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if (mp.isPlaying()) {
             mp.stop();
             mp.release();
-            position = (position + 1) % list.size();
+            if (isshuffled && !isrepeated) {
+                position = getRandom(list.size() - 1);
+            }
+            else if (!isshuffled && !isrepeated) {
+                position = (position + 1) % list.size();
+            }
             uri = Uri.parse(list.get(position).getData());
             mp = MediaPlayer.create(getApplicationContext(), uri);
             metaData(uri);
@@ -265,7 +320,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp.start();
         }
         else {
-            position = (position + 1) % list.size();
+            if (isshuffled && !isrepeated) {
+                position = getRandom(list.size() - 1);
+            }
+            else if (!isshuffled && !isrepeated) {
+                position = (position + 1) % list.size();
+            }
             uri = Uri.parse(list.get(position).getData());
             mp = MediaPlayer.create(getApplicationContext(), uri);
             metaData(uri);
@@ -287,7 +347,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp.start();
         }
     }
-    
+
+    private int getRandom(int i) {
+        Random random = new Random();
+        return random.nextInt(i + 1);
+    }
+
 
     private void playbtn() {
         play = new Thread() {
