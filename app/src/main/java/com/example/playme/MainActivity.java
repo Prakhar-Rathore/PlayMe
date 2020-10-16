@@ -19,8 +19,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    boolean serviceBound = false;
     static ArrayList<Audio> audioList;
     public static final int REQUEST_CODE = 1;
     RecyclerView recycler_view;
