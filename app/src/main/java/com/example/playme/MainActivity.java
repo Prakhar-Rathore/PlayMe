@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     RecyclerView recycler_view;
     MusicAdapter music_adapter;
+
     static boolean isshuffled = false, isrepeated = false;
 
     @Override
