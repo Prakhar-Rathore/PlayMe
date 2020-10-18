@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                 String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                 String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
 
-                // Save to audioList
                 audioList.add(new Audio(data, title, album, artist, duration, id));
             }
         }
