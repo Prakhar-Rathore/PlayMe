@@ -2,10 +2,12 @@ package com.example.playme;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -31,10 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         permission();
-        initRecyclerView();
     }
 
-    private void initRecyclerView() {
+    public void initRecyclerView() {
         recycler_view = findViewById(R.id.recycler_view);
         recycler_view.setHasFixedSize(true);
         if (!(audioList.size() < 1)) {
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void permission() {
+
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission   .WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
 
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             loadAudio();
+            initRecyclerView();
         }
     }
 
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 loadAudio();
+                initRecyclerView();
             }
             else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
