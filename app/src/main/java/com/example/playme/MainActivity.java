@@ -9,6 +9,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         permission();
+
     }
 
     public void initRecyclerView() {
@@ -96,4 +101,5 @@ public class MainActivity extends AppCompatActivity {
         }
         cursor.close();
     }
+
 }

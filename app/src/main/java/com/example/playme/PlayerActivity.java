@@ -36,9 +36,10 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     static MediaPlayer mp;
     private Handler handler = new Handler();
     private Thread play, prev, next;
-//    Animation animout;
+    //    Animation animout;
 //    Animation animin;
     Animation rotation;
+    String CHANNEL_ID = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (mp != null && b) {
-                    mp.seekTo(i*1000);
+                    mp.seekTo(i * 1000);
                 }
             }
 
@@ -88,8 +89,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 if (isshuffled) {
                     isshuffled = false;
                     shuffle.setAlpha(0.5f);
-                }
-                else {
+                } else {
                     isshuffled = true;
                     shuffle.setAlpha(1f);
                 }
@@ -102,8 +102,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 if (isrepeated) {
                     isrepeated = false;
                     repeat.setAlpha(0.5f);
-                }
-                else {
+                } else {
                     isrepeated = true;
                     repeat.setAlpha(1f);
                 }
@@ -148,8 +147,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         String totalNew = minutes + ":" + "0" + seconds;
         if (seconds.length() == 1) {
             return totalNew;
-        }
-        else {
+        } else {
             return totalOut;
         }
     }
@@ -167,8 +165,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp = MediaPlayer.create(getApplicationContext(), uri);
             mp.start();
             music_img.startAnimation(rotation);
-        }
-        else {
+        } else {
             mp = MediaPlayer.create(getApplicationContext(), uri);
             mp.start();
             music_img.startAnimation(rotation);
@@ -217,8 +214,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp.release();
             if (isshuffled && !isrepeated) {
                 position = getRandom(list.size() - 1);
-            }
-            else if (!isshuffled && !isrepeated) {
+            } else if (!isshuffled && !isrepeated) {
                 position = (position - 1) < 0 ? (list.size() - 1) : position - 1;
             }
             uri = Uri.parse(list.get(position).getData());
@@ -240,12 +236,10 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp.setOnCompletionListener(this);
             play_pause.setImageResource(R.drawable.ic_baseline_pause);
             mp.start();
-        }
-        else {
+        } else {
             if (isshuffled && !isrepeated) {
                 position = getRandom(list.size() - 1);
-            }
-            else if (!isshuffled && !isrepeated) {
+            } else if (!isshuffled && !isrepeated) {
                 position = (position - 1) < 0 ? (list.size() - 1) : position - 1;
             }
             uri = Uri.parse(list.get(position).getData());
@@ -295,8 +289,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mp.release();
             if (isshuffled && !isrepeated) {
                 position = getRandom(list.size() - 1);
-            }
-            else if (!isshuffled && !isrepeated) {
+            } else if (!isshuffled && !isrepeated) {
                 position = (position + 1) % list.size();
             }
             uri = Uri.parse(list.get(position).getData());
@@ -318,12 +311,10 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             play_pause.setImageResource(R.drawable.ic_baseline_pause);
             mp.setOnCompletionListener(this);
             mp.start();
-        }
-        else {
+        } else {
             if (isshuffled && !isrepeated) {
                 position = getRandom(list.size() - 1);
-            }
-            else if (!isshuffled && !isrepeated) {
+            } else if (!isshuffled && !isrepeated) {
                 position = (position + 1) % list.size();
             }
             uri = Uri.parse(list.get(position).getData());
@@ -388,8 +379,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                     handler.postDelayed(this, 1000);
                 }
             });
-        }
-        else {
+        } else {
             play_pause.setImageResource(R.drawable.ic_baseline_pause);
             mp.start();
             music_img.startAnimation(rotation);
